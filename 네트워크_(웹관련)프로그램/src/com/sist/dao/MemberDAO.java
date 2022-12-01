@@ -6,18 +6,18 @@ import java.util.*;
 public class MemberDAO {
 	private Connection conn;
 	private PreparedStatement ps;
-	private final String URL = "jdbc:oracla:thin@localhost:1521:xe";
+	private final String URL="jdbc:oracle:thin:@localhost:1521:xe";
 	
 	// 드라이버 등록
 	public MemberDAO() {
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDrive");
+			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (Exception e) {}
 	}
 	// 연결
 	public void getConnection() {
 		try {
-			conn = DriverManager.getConnection(URL, "hr", "happy"); // 오라클 => conn hr/happy
+			conn = DriverManager.getConnection(URL,"hr","happy"); // 오라클 => conn hr/happy
 		} catch (Exception e) {}
 	}
 	// 해제
@@ -40,7 +40,7 @@ public class MemberDAO {
 			// 연결
 			getConnection();
 			// SQL문장 제작
-			String sql = "SELECT COUNT(*) FROM member WHERE id='" + id + "'";
+			String sql = "SELECT COUNT(*) FROM member WHERE id='"+id+"'";
 			ps=conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
@@ -48,7 +48,7 @@ public class MemberDAO {
 			if(count == 0) {
 				result = "NOID";
 			} else {
-				sql = "SELECT pwd,name FROM member WHERE id='" + id + "'";
+				sql = "SELECT pwd,name FROM member WHERE id='"+id+"'";
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				rs.next();
@@ -71,6 +71,13 @@ public class MemberDAO {
 		return result;
 	}
 }
+
+
+
+
+
+
+
 
 
 

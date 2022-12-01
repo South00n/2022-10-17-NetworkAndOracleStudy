@@ -30,7 +30,7 @@ public class ChatServer {
 		// TODO Auto-generated method stub
 		
 	}
-	// 통신 => 사용자 요청 받기, 사용자 요청처리후에 응답 ==> 통신 소켓
+	// 통신 => 사용자 요청 받기, 사용자 요청처리후에 응답 ==> 통신 소켓 ==> 접속마다 생성해야 된다 => 접속자마다 따로 통신을 수행
 	class Client extends Thread {
 		
 	}

@@ -93,7 +93,7 @@ public class ClientMain extends JFrame implements ActionListener, Runnable { // 
 			
 			try {
 				// 채팅 문자열 전송 (서버로 전송 => out.write())
-				out.write((msg + "\n").getBytes()); // 웹 => 주소란 ==> 데이터
+				out.write((300 + "|" + msg + "\n").getBytes()); // 웹 => 주소란 ==> 데이터
 				// ?데이터&데이터&데이터....
 			} catch (Exception ex) {}
 			wr.tf.setText(""); // 채팅치고 채팅창 지우기
@@ -189,6 +189,11 @@ public class ClientMain extends JFrame implements ActionListener, Runnable { // 
 								break;
 							}
 						}
+					}
+					break;
+					
+					case 300: {// 채팅문장열이 들어온 경우
+						wr.ta.append(st.nextToken() + "\n"); // 서버 => 전송 => 받아서 출력
 					}
 					break;
 				}

@@ -144,6 +144,11 @@ public class Server implements Runnable {
 							}
 						}
 						break;
+						
+						case 300: {
+							messgeAll(300 + "|[" + name + "]" + st.nextToken());
+						}
+						break;
 					}
 				} 
 			} catch (Exception ex) {}

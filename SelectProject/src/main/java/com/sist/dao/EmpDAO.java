@@ -136,9 +136,107 @@ public class EmpDAO {
 		}
 		return list;
 	}
+	public ArrayList<EmpVO> empFindData(String ename) {
+		ArrayList<EmpVO> list = new ArrayList<EmpVO>();
+		try {
+			// 1. 연결
+			getConnection();
+			// 2. SQL문장 제작
+			String sql = "SELECT empno, ename, job, hiredate, sal "
+					 	+ "FROM emp "
+					 	+ "WHERE ename LIKE '%'||?||'%'"; // 오라클과 다르다
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, ename);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				EmpVO vo = new EmpVO();
+				vo.setEmpno(rs.getInt(1));
+				vo.setEname(rs.getString(2));
+				vo.setJob(rs.getString(3));
+				vo.setHiredate(rs.getDate(4));
+				vo.setSal(rs.getInt(5));
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			// 오류 확인
+			System.out.println(e.getMessage());
+		} finally {
+			// 해제
+			disConnection();
+		}
+		return list;
+	}
+	// subquery
+	// 한명의 정보 => 
+	public EmpVO empSubQueryData(String ename) {
+		EmpVO vo = new EmpVO();
+		try {
+			// 1. 연결
+			getConnection();
+			// 2. SQL문장
+			String sql = "SELECT empno, ename, job, hiredate, sal,"
+						+ "(SELECT dname FROM dept WHERE deptno = emp.deptno) dname,"
+						+ "(SELECT loc FROM dept WHERE deptno = emp.deptno) loc "
+						+ "FROM emp "
+						+ "WHERE ename = ?";
+			// 3. 오라클 전송
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, ename); // setString -> ''안에 들어감
+			// ps.setInt(1,10) ==> 10
+			// 4. 결과값을 읽어서 메모리에 저장
+			ResultSet rs = ps.executeQuery();
+			// 5. EmpVO에 값을 대입
+			rs.next();
+			vo.setEmpno(rs.getInt(1));
+			vo.setEname(rs.getString(2));
+			vo.setJob(rs.getString(3));
+			vo.setHiredate(rs.getDate(4));
+			vo.setSal(rs.getInt(5));
+			vo.getDvo().setDname(rs.getString(6));
+			vo.getDvo().setLoc(rs.getString(7));
+			rs.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			disConnection();
+		}
+		return vo;
+	}
+	// 인라인뷰 ==> FROM (SELECT ~)
+	public ArrayList<EmpVO> empInlineView(int num) {
+		ArrayList<EmpVO> list = new ArrayList<EmpVO>();
+		try {
+			// 1. 연결
+			getConnection();
+			// 2. SQL문장 제작 => 급여 순서대로 상위 5명만 읽어 온다
+			//						1 	  2 	3	   4	  5       6  rs넘버
+			String sql = "SELECT empno, ename, job, hiredate, sal, rownum "
+						+ "FROM (SELECT * FROM emp ORDER BY sal DESC) "
+						+ "WHERE rownum <= ?";
+			// 3. 오라클 전송
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, num); // SQL문장 첫번째 ?에 num을 채워준다
+			// 4. 실행후 결과값 메모리에 저장
+			ResultSet rs = ps.executeQuery();
+			// 5. 메모리에 저장된 값을 읽어서 ArrayList에 대입
+			while (rs.next()) {
+				EmpVO vo = new EmpVO();
+				vo.setEmpno(rs.getInt(1));
+				vo.setEname(rs.getString(2));
+				vo.setJob(rs.getString(3));
+				vo.setHiredate(rs.getDate(4));
+				vo.setSal(rs.getInt(5));
+				list.add(vo);
+			}
+				
+		} catch (Exception e) {
+			System.out.println(e.getMessage()); // 오류확인
+		} finally {
+			disConnection(); // 오라클 해제
+		}
+		return list;
+	}
 }
-
-
 
 
 

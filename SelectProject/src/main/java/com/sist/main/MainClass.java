@@ -9,7 +9,7 @@ public class MainClass {
 		// TODO Auto-generated method stub
 		// 오라클 연결
 		EmpDAO dao =EmpDAO.newInstance(); // 싱글턴 객체 생성할때 사용
-		ArrayList<EmpVO> list = dao.empListData();
+		/*ArrayList<EmpVO> list = dao.empListData();
 		for(EmpVO vo : list) {
 			System.out.println(vo.getEmpno() + " "
 					+ vo.getEname() + " "
@@ -19,8 +19,36 @@ public class MainClass {
 					+ vo.getDvo().getDname() + " "
 					+ vo.getDvo().getLoc() + " "
 					+ vo.getSvo().getGrade());
-		}
+		}*/
+		Scanner sc = new Scanner(System.in);
+		/*System.out.print("이름 입력 : ");
+		String ename = sc.next();
 		
+		ArrayList<EmpVO> list = dao.empFindData(ename);
+		for(EmpVO vo : list) {
+			System.out.println(vo.getEmpno() + " "+ vo.getEname() + " "
+					+ vo.getJob() + " "
+					+ vo.getHiredate().toString() + " "
+					+ vo.getSal());
+		}*/
+		// EmpVO vo = dao.empSubQueryData(ename.toUpperCase()); // 대문자변환
+		System.out.print("인원 입력 : ");
+		int num = sc.nextInt();
+		ArrayList<EmpVO> list = dao.empInlineView(num);
+		for(EmpVO vo : list) {
+			System.out.println(vo.getEmpno() + " "+ vo.getEname() + " "
+					+ vo.getJob() + " "
+					+ vo.getHiredate().toString() + " "
+					+ vo.getSal());
+		}
+		/*
+		 * System.out.println("사번 : " + vo.getEmpno()); System.out.println("이름 : " +
+		 * vo.getEname()); System.out.println("직위 : " + vo.getJob());
+		 * System.out.println("입사일 : " + vo.getHiredate()); System.out.println("급여 : " +
+		 * vo.getSal());
+		 */
+		// System.out.println("부서명 : " + vo.getDvo().getDname());
+		// System.out.println("근무지 : " + vo.getDvo().getLoc());
 	}
 
 }

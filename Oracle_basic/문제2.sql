@@ -64,20 +64,25 @@ HAVING AVG(sal) >= 2000;
 -- WHERE => 그룹 함수를 사용할 수 없다, 그룹함수를 사용시에는 HAVING을 이용한다
 
 -- 1. 사원 이름이 SCOTT인 사원의 사번(empno), 이름(ename), 부서명(dname)를 출력하세요.
-SELECT empno, ename, dname
-FROM emp, dept
-WHERE emp.ename = 'SCOTT';
+SELECT e.empno, e.ename, d.dname
+FROM emp e, dept d
+WHERE e.deptno = d.deptno AND e.ename = 'SCOTT';
 
 -- 2. 사원이름과 급여(sal)와 급여등급(grade)을 출력하세요.
 SELECT ename, sal, grade
-FROM emp, salgrade;
+FROM emp, salgrade
+WHERE sal BETWEEN losal AND hisal;
 
 -- 3. 위 2번문제에서 부서명을 추가시켜 출력하세요.
-SELECT ename, sal, grade, deptno
-FROM emp, salgrade;
+SELECT ename, sal, grade, dname
+FROM emp, salgrade, dept
+WHERE dept.deptno = emp.deptno AND sal BETWEEN losal AND hisal;
 
 -- 4. 사원이름과 매니저의 이름을 아래와 같은 형식으로 출력하세요.
---    "XXX"의 매니져는 "XXX" 입니다. 
+--    "XXX"의 매니져는 "XXX" 입니다.
+SELECT e1.ename || '의 매니져는 ' || e2.ename || '입니다.'
+FROM emp e1, emp e2
+WHERE e1.mgr = e2.empno;
 
 -- 5. 부서번호가 30번인 사원들의 이름, 직급(job), 부서번호(deptno), 부서위치(loc)를 출력하세요.
 SELECT ename, job, emp.deptno, loc
@@ -99,25 +104,43 @@ AND loc = 'DALLAS';
 -- 8. 이름에 'A'가 들어가는 사원들의 이름과 부서명을 출력하세요.
 SELECT ename, dname
 FROM emp, dept
-WHERE ename LIKE '%A%';
+WHERE ename LIKE '%A%' AND emp.deptno = dept.deptno;
 
 -- 1. SCOTT의 급여와 동일하거나 더 많이 받는 사원의 이름과 급여를 출력하세요.
 SELECT ename, sal
 FROM emp
-WHERE sal = (SELECT sal FROM emp WHERE ename = 'SCOTT');
+WHERE sal >= (SELECT sal FROM emp WHERE ename = 'SCOTT');
+
 -- 2. 직급(job)이 'CLERK'인 사람의 부서의 부서번호와 부서명을 출력하세요.
-SELECT emp.deptno, dept.dname
-FROM emp, dept
-WHERE emp.job = 'CLERK';
+SELECT deptno, dname
+FROM dept
+WHERE deptno IN (SELECT deptno FROM emp WHERE job = 'CLERK');
 
 -- 3. 이름에 T를 포함하고 있는 사원들과 같은부서에서 근무하는 사원의 사번과 이름을 출력하세요
+SELECT empno, ename
+FROM emp
+WHERE deptno IN (SELECT deptno FROM emp WHERE ename LIKE '%T%');
 
 -- 4. 부서위치(loc)가 DALLAS인 모든 사원의 이름, 부서번호를 출력하세요
+SELECT ename, deptno
+FROM emp
+WHERE deptno = (SELECT deptno FROM dept WHERE loc = 'DALLAS');
 
 -- 5. SALES 부서의 모든사원의 이름과 급여를 출력하세요
+SELECT ename, sal
+FROM emp
+WHERE deptno = (SELECT deptno FROM dept WHERE dname = 'SALES');
 
 -- 6. 자신의 급여가 평균 급여보다 많고 이름에 S가 들어가는 사원과
 --    동일한 부서에서 근무하는 모든 사원의 이름, 급여를 출력하세요
+SELECT ename, sal
+FROM emp
+WHERE deptno in (SELECT deptno FROM emp WHERE sal > (SELECT AVG(sal) FROM emp) AND ename LIKE '%S%');
+
 -- 7. 평균 급여보다 더 많은 급여를 받는 사원의 이름, 사번, 급여를 검색하되 급여가 많은 순서로나열하세요.
+SELECT ename, empno, sal
+FROM emp
+WHERE sal > (SELECT AVG(sal) FROM emp)
+ORDER BY sal DESC;
 
 

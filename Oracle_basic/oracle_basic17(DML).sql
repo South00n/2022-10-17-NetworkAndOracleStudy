@@ -116,4 +116,23 @@ INSERT INTO student (hakbun, name, kor, eng, math) VALUES((SELECT MAX(hakbun) + 
 
 -- 자동증가번호 , 형식 (필요한 데이터 추가, 전체 데이터 추가) 
 -- default가 많은 경우 => 선택적으로 추가
+-- 문자/날짜는 반드시 ''를 이용해서 추가한다
 -- 그렇지 않은 경우 => 전체적으로 추가
+
+ALTER TABLE student DROP COLUMN subject;
+ALTER TABLE student DROP COLUMN regdate;
+
+CREATE TABLE emp_test
+AS
+SELECT * FROM emp;
+
+SELECT * FROM emp_test;
+
+TRUNCATE TABLE emp_test;
+
+INSERT INTO emp_test(empno, ename, job, mgr, hiredate, sal, comm, deptno)
+SELECT * FROM emp;
+
+SELECT * FROM student;
+
+TRUNCATE TABLE student;

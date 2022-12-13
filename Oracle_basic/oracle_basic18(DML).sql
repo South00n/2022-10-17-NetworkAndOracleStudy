@@ -63,5 +63,57 @@ job = 'SALESMAN', mgr = 7698, hiredate = '20/01/05', sal = 3500, comm = 700, dep
 -- 대입
 WHERE empno = 7937;
 -- 비교연산자
+COMMIT; -- DML -- 메모리에 저장
+
+INSERT INTO emp_update VALUES((SELECT MAX(empno) + 1 FROM emp_update), '홍길동1', 'CLERK', 7788,
+        SYSDATE, 2000, 100, 50);
+INSERT INTO emp_update VALUES((SELECT MAX(empno) + 1 FROM emp_update), '홍길동5', 'CLERK', 7788,
+        SYSDATE, 2000, 100, 50);
+INSERT INTO emp_update VALUES((SELECT MAX(empno) + 1 FROM emp_update), '홍길동2', 'CLERK', 7788,
+        SYSDATE, 2000, 100, 50);
+INSERT INTO emp_update VALUES((SELECT MAX(empno) + 1 FROM emp_update), '홍길동3', 'CLERK', 7788,
+        SYSDATE, 2000, 100, 50);
+INSERT INTO emp_update VALUES((SELECT MAX(empno) + 1 FROM emp_update), '홍길동4', 'CLERK', 7788,
+        SYSDATE, 2000, 100, 50);
 COMMIT;
 
+UPDATE emp_update SET
+deptno = 60
+WHERE deptno = (SELECT deptno FROM emp_update WHERE empno = 7938);
+-- 서브쿼리 사용이 가능
+SELECT * FROM emp_update;
+-- 문자, 날짜 ==> '', 문자일 경우 => byte DESC
+COMMIT;
+
+/*
+       DELETE : 데이터 삭제
+       형식)
+            DELETE FROM table_name
+            [WHERE 조건] -- 조건이 없으면 전체삭제
+*/
+-- 전체 삭제
+DELETE FROM emp_update;
+
+SELECT * FROM emp_update;
+ROLLBACK;
+
+DELETE FROM emp_update
+WHERE deptno = 60;
+COMMIT;
+
+DELETE FROM emp_update
+WHERE empno = 7937;
+COMMIT;
+
+DELETE FROM emp_update
+WHERE deptno  = (SELECT MAX(deptno) FROM emp_update); 
+COMMIT;
+
+TRUNCATE TABLE emp_update; -- ROLLBACK 불가 (DML만 가능)
+SELECT * FROM emp_update;
+ROLLBACK;
+DROP TABLE emp_update;
+/*
+    COMMIT/ROLLBACK => INSERT, UPDATE, DELETE
+    ALTER, CREATE, RENAME, DROP, TRUNCATE => COMMIT/ROLLBACK이 적용되지 않는다
+*/

@@ -147,6 +147,7 @@ public class ViewDAO {
 		}
 	}
 	// View이용 => 상세보기
+	// 뷰 ==> 응용프로그램 제작시에 복잡한 SQL문장 => 단순하게 만들 수 있다
 	public void viewDetailData(int empno) {
 		try {
 			getConnection();
